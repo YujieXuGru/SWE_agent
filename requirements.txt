@@ -1,0 +1,17 @@
+# core orchestration
+langgraph>=0.1.0
+
+# LLM integration
+openai>=1.0.0
+
+# environment variable loading
+python-dotenv>=1.0.0
+
+# HTTP client for GitHub API
+requests>=2.28.0
+
+# typing helpers
+typing_extensions>=4.5.0
+
+# optional, if you’re using pytest for tests
+pytest>=7.0.0
