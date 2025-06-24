@@ -1,4 +1,4 @@
-# planner/code_locator.py
+# locator/llm_location_predictor.py
 
 import os
 import json

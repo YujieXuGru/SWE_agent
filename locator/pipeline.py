@@ -1,12 +1,12 @@
-# planner/pipeline.py
+# locator/pipeline.py
 
 from typing import List, TypedDict, Dict, Any
 from langgraph.graph import StateGraph, START, END
 
-from planner.schema        import TaskDescriptor
-from planner.vm_manager    import setup_workspace, clone_repository
-from planner.file_scanner  import scan_py_files
-from planner.code_locator  import locate_with_llm
+from locator.schema        import TaskDescriptor
+from locator.vm_manager    import setup_workspace, clone_repository
+from locator.file_scanner  import scan_py_files
+from locator.llm_location_predictor  import locate_with_llm
 from intake.schema         import StructuredIssue
 
 class PlannerState(TypedDict, total=False):

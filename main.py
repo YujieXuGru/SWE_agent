@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from intake.pipeline   import run_intake
-from planner.pipeline  import run_planner
+from locator.pipeline  import run_planner
 
 def main():
     # 1. 指定 GitHub 仓库（owner/repo）

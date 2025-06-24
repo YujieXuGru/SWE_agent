@@ -1,4 +1,4 @@
-# planner/vm_manager.py
+# locator/vm_manager.py
 
 from vm_executor.sdk import SimpleGboxVM
 

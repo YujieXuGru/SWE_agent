@@ -1,8 +1,8 @@
-# planner/file_scanner.py
+# locator/file_scanner.py
 
 import logging
 from typing import Dict, List
-from planner.vm_manager import get_vm, read_file_numbered
+from locator.vm_manager import get_vm, read_file_numbered
 
 logger = logging.getLogger(__name__)
 

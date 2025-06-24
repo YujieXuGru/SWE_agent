@@ -1,4 +1,4 @@
-# planner/schema.py
+# locator/schema.py
 
 from dataclasses import dataclass
 from typing import Literal, List
