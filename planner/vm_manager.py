@@ -23,3 +23,13 @@ def clone_repository(state) -> dict:
     vm = get_vm()
     vm.run_command(f"git clone {repo_url} {workdir}")
     return {}
+
+def read_file_numbered(path: str) -> str:
+    """
+    Read a file on the VM, returning every line prefixed with its line number.
+    Uses `nl -ba` so blank lines are numbered too.
+    """
+    vm = get_vm()
+    res = vm.run_command(f"nl -ba {path}")
+    # res["stdout"] already contains numbered lines
+    return res["stdout"]

@@ -2,7 +2,7 @@
 
 import logging
 from typing import Dict, List
-from planner.vm_manager import get_vm
+from planner.vm_manager import get_vm, read_file_numbered
 
 logger = logging.getLogger(__name__)
 
@@ -17,10 +17,9 @@ def scan_py_files(workdir: str) -> Dict[str, List[Dict[str, str]]]:
     paths = result["stdout"].splitlines()
 
     files = []
-    for path in paths:
-        cat = vm.run_command(f"cat {path}")
-        content = cat["stdout"]
-        files.append({"path": path, "content": content})
+    for p in paths:
+        numbered = read_file_numbered(p)
+        files.append({"path": p, "content": numbered})
 
     logger.info("Scanned and read %d Python files", len(files))
     return {"files": files}
