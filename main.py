@@ -1,31 +1,50 @@
 # main.py
 
+import os
 from dotenv import load_dotenv
+
+# Load environment variables (OPENAI_API_KEY, GBOX_API_KEY, etc.)
 load_dotenv()
 
-from intake.pipeline   import run_intake
-from locator.pipeline  import run_planner
+# 1. Intake: fetch & structure GitHub Issues
+from intake.pipeline import run_intake
+
+# 2. Locator: scan the repo, invoke LLM to locate insertion points
+from locator.pipeline import run_locator
+from locator.schema   import LocatorResult
+
+from vm_executor.vm_manager import initialize_vm, cleanup_vm
 
 def main():
-    # 1. 指定 GitHub 仓库（owner/repo）
-    owner = "YujieXuGru"
-    repo  = "Flask_Demo"
-    repo_spec = f"{owner}/{repo}"
+    # ——— Repository configuration ———
+    owner     = os.getenv("GITHUB_OWNER", "YujieXuGru")
+    repo_name = os.getenv("GITHUB_REPO",  "Flask_Demo")
+    repo_spec = f"{owner}/{repo_name}"
     repo_url  = f"https://github.com/{repo_spec}.git"
+    initialize_vm()
 
-    # 2. Intake 阶段：把原始 Issue 转成 StructuredIssue
+    # ——— 1. Intake stage ———
+    print("Running intake...")
     structured_issues = run_intake(repo_spec)
-    for si in structured_issues:
-        print("🔍 Intake ->", si)
+    if not structured_issues:
+        print("No issues found.")
+        return
 
-        # 3. Planner 阶段：为这个 Issue 生成 TaskDescriptor 列表
-        tasks = run_planner(si, repo_url)
-        print("🗺  Planner ->")
-        for t in tasks:
-            print("   ", t)
+    # ——— 2. Locator stage ———
+    for issue in structured_issues:
+        print("\n🔍 Intake →", issue)
 
-        # （后续你可以在这里把 tasks 发给 Executor 去实际执行）
-        print()
+        locator_res: LocatorResult = run_locator(
+            issue=issue,
+            repo_url=repo_url,
+            context=None  # optional, for future reruns with test logs
+        )
+        print("🗺 Locator →")
+        for loc in locator_res.locations:
+            print("   ", loc)
+        print("   explanation:", locator_res.explanation)
 
+        # (Next steps: pass locator_res into your task_planner, patcher, etc.)
+        cleanup_vm()
 if __name__ == "__main__":
     main()
