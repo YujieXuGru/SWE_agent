@@ -1,23 +1,24 @@
-# patcher/applier.py
-
 from vm_executor.vm_manager import get_vm
 
 def apply_patch(diff: str, workdir: str) -> dict:
     """
-    Apply the unified diff to the given workdir on the VM.
+    Apply the unified diff to the given workdir on the VM using the 'patch' command.
     Returns applied_ok, stdout, stderr.
     """
     vm = get_vm()
 
-    # Write diff to /tmp/patch.diff
-    here_doc = f"""cat << 'EOF' > /tmp/patch.diff
+
+    patch_file_path = "/tmp/agent.patch"
+    here_doc = f"""cat << 'EOF' > {patch_file_path}
 {diff}
 EOF"""
     vm.run_command(here_doc)
 
-    # Apply patch on current branch
-    cmd = f"cd {workdir} && git apply /tmp/patch.diff"
+    cmd = f"cd {workdir} && patch -p2 -u --forward < {patch_file_path}"
     result = vm.run_command(cmd)
+
+    # Clean up the temporary patch file
+    vm.run_command(f"rm {patch_file_path}")
 
     return {
         "applied_ok": result.get("exitCode", 1) == 0,

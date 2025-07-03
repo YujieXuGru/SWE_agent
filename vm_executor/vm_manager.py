@@ -15,6 +15,12 @@ def initialize_vm(api_key: Optional[str] = None) -> SimpleGboxVM:
     if _vm_client is None:
         _vm_client = SimpleGboxVM(api_key)
         _vm_client.create_vm()
+
+
+        print("🔧 Installing required tools ('patch')...")
+        install_cmd = "apt-get update && apt-get install -y patch"
+        result = _vm_client.run_command(install_cmd)
+        print(result["stdout"])
     return _vm_client
 
 def get_vm() -> SimpleGboxVM:

@@ -1,5 +1,3 @@
-# patcher/schema.py
-
 from dataclasses import dataclass
 
 @dataclass
@@ -14,6 +12,6 @@ class ApplyResult:
     """
     The result of applying a patch to the repository.
     """
-    applied_ok: bool  # True if git apply exitCode == 0
-    stdout: str       # stdout from git apply
-    stderr: str       # stderr from git apply
+    applied_ok: bool  # True if the patch command exitCode == 0
+    stdout: str       # stdout from the patch command
+    stderr: str       # stderr from the patch command
